@@ -14,8 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
+
+import artist
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # artist/로 시작하는 path가
+    # artist.urls모듈을 include하도록 설정
+    path('artist/', include('artist.urls')),
+    path('song/', include('song.urls')),
+    path('album/',include('album.urls')),
 ]

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}album list{% endblock %}
+
+{% block contents%}
+<div>
+    <ul>
+         {% for album in albums%}
+        <li> {{album.name}}</li>
+
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}}
