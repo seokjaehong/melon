@@ -2,13 +2,15 @@
 
 {% block title %}artist list{% endblock %}
 
-{% block contents%}
-<div>
-    <ul>
-        {% for artist in artists%}
-        <li> {{artist.name}}</li>
+{% block content %}
+	<ul>
+		{% for artist in artists %}
+		<li>{{ artist.name }}</li>
+		{% endfor %}
+	</ul>
+{% endblock %}
 
-        {% endfor %}
-    </ul>
-</div>
-{% endblock %}}
+
+
+
+

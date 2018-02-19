@@ -1,4 +1,6 @@
 from django.db import models
+from django.forms import forms
+#from django_extensions import settings
 
 
 class Artist(models.Model):
@@ -33,10 +35,12 @@ class Artist(models.Model):
         max_length=50,
         blank=True,
     )
+
     birth_date = models.DateField(
         '생년월일',
         blank=True,
         null=True,
+        # input_formats=settings.DATE_INPUT_FORMATS
     )
     constellation = models.CharField(
         '별자리',
@@ -53,7 +57,6 @@ class Artist(models.Model):
         '소개',
         blank=True,
     )
-
 
     def __str__(self):
         return self.name
