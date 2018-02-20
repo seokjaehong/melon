@@ -81,7 +81,6 @@ def song_search(request):
         context['songs_from_albums'] = songs_from_albums
         context['songs_from_artists'] = songs_from_artists
 
-
 # get 이면 빈상태로 render실행
     return render(request, 'song/song_search.html', context)
 

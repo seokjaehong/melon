@@ -2,38 +2,17 @@
 
 {% block content %}
 <div>
-    <h1>
-        <a href="song:song-search">노래검색</a>
-    </h1>
+    <h1><a href="{% url 'song:song-search' %}">노래 검색</a></h1>
+
 
     <form action="" method="get">
         <input type="text" name="keyword">
         <button type="submit">검색</button>
     </form>
 
-    <ul>
-        {% for song in songs_from_title %}
-        {노래로 검색한 노래결과}
-        <li>
-            {{ song.title }}
-        </li>
-        {% endfor %}
-    </ul>
-    <ul>
-        {% for song in songs_from_albums %}
-        {앨범으로 검색한 노래결과}
-        <li>
-            {{ song.title }}
-        </li>
-        {% endfor %}
-    </ul>
-    <ul>
-        {% for song in songs_from_artists %}
-        {아티스트로 검색한 노래결과}
-        <li>
-            {{ song.title }}
-        </li>
-        {% endfor %}
-    </ul>
+    {% include "include/song_search_result.html" with songs=songs_from_title search_condition="노래" only%}
+    {% include "include/song_search_result.html" with songs=songs_from_albums search_condition="앨범" only %}
+    {% include "include/song_search_result.html" with songs=songs_from_artists search_condition="아티스트" only %}
+
 </div>
 {% endblock %}
