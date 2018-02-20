@@ -1,9 +1,8 @@
+{{type}}로 검색한 결과
 <ul>
     {% for song in songs %}
-
-    {{search_condition}}로 검색한 결과
     <li>
         {{ song.title }}
     </li>
+    {% endfor %}
 </ul>
-{% endfor %}

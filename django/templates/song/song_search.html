@@ -6,13 +6,20 @@
 
 
     <form action="" method="get">
-        <input type="text" name="keyword">
+        <input type="text" name="keyword" value="{{ request.GET.keyword }}">
         <button type="submit">검색</button>
     </form>
 
-    {% include "include/song_search_result.html" with songs=songs_from_title search_condition="노래" only%}
-    {% include "include/song_search_result.html" with songs=songs_from_albums search_condition="앨범" only %}
-    {% include "include/song_search_result.html" with songs=songs_from_artists search_condition="아티스트" only %}
+    <!--{% include "include/song_search_result.html" with songs=songs_from_title search_condition="노래" only %}-->
+    <!--{% include "include/song_search_result.html" with songs=songs_from_albums search_condition="앨범" only %}-->
+    <!--{% include "include/song_search_result.html" with songs=songs_from_artists search_condition="아티스트" only %}-->
 
+    <!--
+    for문을 순회하면서 include태그를 순회문 안에서 1번만 사용ㅎ해서 3개를 출력할 수 있도록
+    view.py를 수정
+    -->
+    {% for song_info in song_infos%}
+        {% include "include/song_search_result.html" with type=song_info.type songs=song_info.songs only %}
+    {% endfor %}
 </div>
 {% endblock %}

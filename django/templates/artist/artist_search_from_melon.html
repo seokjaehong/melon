@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+
+    <h1>아티스트 검색 </h1>
+    <form action="" >
+        <input type="text" name="keyword" >
+        <button type="submit">검색</button>
+    </form>
+
+    <ul>
+        {% for artist in artists %}
+        <li>
+            {{ artist.id }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

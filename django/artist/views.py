@@ -1,6 +1,9 @@
+
 from django.shortcuts import render, redirect
 
 from .models import Artist
+import requests
+from bs4 import  BeautifulSoup
 
 
 def artist_list(request):
@@ -58,7 +61,7 @@ def artist_add(request):
             name=name,
             real_name=real_name,
             nationality=nationality,
-            birth_date=birth_date ,
+            birth_date=birth_date,
             constellation=constellation,
             blood_type=blood_type,
             intro=intro,
@@ -66,3 +69,62 @@ def artist_add(request):
         return redirect('artist:artist-list')
     else:
         return render(request, 'artist/artist_add.html')
+
+
+def artist_search_from_melon(request):
+    """
+    template :artist /artist_search_from_melon.html
+    form(input[name=keyword]한개, button한개
+    1. form에 주어진' keyword'로 멜론 사이트의 아티스트 검색 결과를 크롤링
+    2. 크롤링된  검색결과를 적절히 파싱해서 검색 결과 목록을 생성
+        -> list내에 dict를 만드는 형태
+        artist_info_list = [
+        {'artist_id':261143, 'name':'아이유','url_img_cover':'http:...'},
+        {'artist_id':261143, 'name':'아이유','url_img_cover':'http:...'},
+        {'artist_id':261143, 'name':'아이유','url_img_cover':'http:...'},
+        ]
+    3. 해당 결과를 목록을 템플릿에 출력
+        context = {'artist_info_list' : artist_info_list로 전달 후 템플릿에 사용
+    :param request:
+    :return:
+    """
+
+    keyword = request.GET.get('keyword')
+    url = "https://www.melon.com/search/artist/index.htm"
+    parameter = {
+        'q': keyword,
+        'section': '',
+        'searchGnbYn': 'Y',
+        'kkoSpl': 'N',
+        'kkoDpType': '',
+        'ipath': 'srch_form',
+    }
+    # response = requests.GET.get(url, parameter)
+    # soup = BeautifulSoup(response.text, 'lxml')
+    # # beutifulsoup을 통해 soup으로 퍼다담음
+    # tr_list = soup.select('div#pageList div > ul > li')
+    #
+    # # 가수의 일반정보 :이름, 국적, 성별, 솔로/그룹 여부 , 장르 ,유명곡 정보를 한번에 받아오기 위해 li 까지만 내려받음
+    # context = []
+    # # 결과를 result에 내려받는 for 문
+    # for tr in tr_list:
+    #     # < a href = "javascript:searchLog('web_artist','ARTIST','AR','아이유','261143');melon.link.goArtistDetail('261143');"title = "아이유 - 페이지 이동"class ="ellipsis" > < b > 아이유 < / b > < / a >
+    #
+    #     artist_info = tr.find('div', class_='wrap_atist12').find('div', class_='atist_info')
+    #     source = tr.find('div', class_='wrap_atist12').find('a', class_='thumb')
+    #
+    #     # print(source)
+    #     # print(type(source))
+    #     # source = artist_info.select_one('a:nth-of-type(1) href').get('value')
+    #
+    #     # r1 = re.compile(r'.*?\;.*?\'(\d.*)\'', re.DOTALL)
+    #
+    #     artist_id = re.search(r"searchLog\(.*'(\d+)'\)", source.get('href')).group(1)
+    #     artistname = artist_info.find('a', class_='ellipsis').text
+    #     artistname_gubun = artist_info.find('dd', class_='gubun').get_text(strip=True)
+    #     artist_genre = artist_info.find('dd', class_='gnr').find('div', class_='fc_strong').get_text(strip=True)
+    #
+    #     artist = Artist(artist_id=artist_id, name=artistname, gubun=artistname_gubun, genre=artist_genre)
+    #     context.append(artist)
+
+    return render(request, 'artist/artist_search_from_melon.html')

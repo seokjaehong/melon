@@ -1,3 +1,6 @@
+from collections import namedtuple
+from typing import NamedTuple
+
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -51,9 +54,7 @@ def song_search(request):
     # 위 세변수에 위의조건 3개에 부합하는 쿼리셋을 각각 전달
     # 세 변수를 이용해 검색결과를 3단으로 분리해서 출력
     # -> 아티스트로 검색한 노래결과, 앨범으로 검색한 노래결과, 제목으로 검색한 노래결과
-    """
-    context = {}
-    # Song과 연결된 Artist의 name에 keyword가 포함되는 경우
+    """  # Song과 연결된 Artist의 name에 keyword가 포함되는 경우
     # Song과 연결된 Album의 name에 keyword가 포함되는 경우
     # 를 모두 포함하는 쿼리셋
     # print(request.GET)
@@ -61,28 +62,81 @@ def song_search(request):
     # print(request.GET.get('keyword'))
 
     # keyword에 빈값이 올 경우 QuerySet을 할당하지 않도록 수정
-    keyword = request.GET.get('keyword', None)
     # keyword = request.GET.keys()
     # keyword = request.GET['keyword']
     # song목록중 title이 keyword를 포함하는 쿼리셋
+
+    context = {
+        'song_infos': [],
+    }
+    keyword = request.GET.get('keyword')
+
+    # SongInfo = namedtuple('SongInfo', ['type', 'q'])
+
+    class SongInfo(NamedTuple):
+        type: str
+        q: Q
+
     if keyword:
-        # songs = Song.objects.filter(
-        #     Q(album__artists__name__contains=keyword) |
-        #     Q(title__contains=keyword)|
-        #     Q(album__title__contains=keyword)
-        # ).distinct
-        songs_from_title = Song.objects.filter(title__contains=keyword)
-        songs_from_albums = Song.objects.filter(album__title__contains=keyword)
-        songs_from_artists = Song.objects.filter(album__artists__name__contains=keyword)
+        song_infos = (
+            SongInfo(
+                type='아티스트명',
+                q=Q(album__artists__name__contains=keyword)),
+            SongInfo(
+                type='앨범명',
+                q=Q(album__title__contains=keyword)),
+            SongInfo(
+                type='노래제목',
+                q=Q(title__contains=keyword)),
+        )
 
-        # 미리선언한 context의 'songs'키에 Queryset을 할당
-
-        context['songs_from_title'] = songs_from_title
-        context['songs_from_albums'] = songs_from_albums
-        context['songs_from_artists'] = songs_from_artists
-
-# get 이면 빈상태로 render실행
+        for type, q in song_infos:
+            context['song_infos'].append({
+                'type': type,
+                'songs': Song.objects.filter(q),
+            })
     return render(request, 'song/song_search.html', context)
 
 # else를 없애고 render 를 한번만 사용해서 get/post 요청을 모두처리
 # return render(request, 'song/song_search.html')
+
+# songs = Song.objects.filter(
+#     Q(album__artists__name__contains=keyword) |
+#     Q(title__contains=keyword)|
+#     Q(album__title__contains=keyword)
+# ).distinct
+
+# filter 뒤의 조건을 Q Objects로 만들어서 for문에서 사용
+# songs_from_title = Song.objects.filter(title__contains=keyword)
+# songs_from_albums = Song.objects.filter(album__title__contains=keyword)
+# songs_from_artists = Song.objects.filter(album__artists__name__contains=keyword)
+
+# 미리선언한 context의 'songs'키에 Queryset을 할당
+
+# context['songs_from_title'] = songs_from_title
+# context['songs_from_albums'] = songs_from_albums
+# context['songs_from_artists'] = songs_from_artists
+
+# zip
+# 1
+# for type, songs in zip(('아티스트명', '앨범명', '노래제목'),
+#                        (songs_from_artists, songs_from_albums, songs_from_title)):
+#     context['song_infos'].append({
+#         'type': type,
+#         'songs': songs,
+#     })
+# 2
+# context['song_infos'].append({
+#     'type': '아티스트명',
+#     'songs': songs_from_artists
+# })
+# context['song_infos'].append({
+#     'type': '앨범명',
+#     'songs': songs_from_albums
+# })
+# context['song_infos'].append({
+#     'type': '노래제목',
+#     'songs': songs_from_title
+# })
+
+# get 이면 빈상태로 render실행
