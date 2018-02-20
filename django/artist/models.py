@@ -16,6 +16,17 @@ class Artist(models.Model):
         (BLOOD_TYPE_AB, 'AB형'),
         (BLOOD_TYPE_OTHER, '기타'),
     )
+    melon_id =models.CharField(
+        '멜론 Artist ID',
+        max_length=20,
+        blank=True,
+        unique=True,
+        #  melon_id가 중복으로 들어와있는경우 에러가 나기때문에 unique를 추가해주는데
+        # 기존 data에 대해 업데이트를 해주어야함 그래서 null=True를 먼저 허용해서 makemigration하고,
+        # shell: Artist.objects.filter(melon_id='').update(melon_id=None)
+
+        null =True,
+    )
     img_profile = models.ImageField(
         '프로필 이미지',
         upload_to='artist',
