@@ -4,6 +4,13 @@ from album.models import Album
 
 
 class Song(models.Model):
+    melon_id = models.CharField(
+        '멜론 SONG ID',
+        max_length=20,
+        blank=True,
+        null=True,
+        unique=True,
+    )
     album = models.ForeignKey(
         Album,
         verbose_name='앨범',

@@ -39,6 +39,7 @@ def artist_add_from_melon(request):
     if request.method == 'POST':
         url = f'https://www.melon.com/artist/detail.htm'
         artist_id = request.POST['artist_id']
+        # url_img_cover = request.POST['url_img_cover']
         params = {
             'artistId': artist_id,
         }
@@ -68,11 +69,18 @@ def artist_add_from_melon(request):
         constellation = personal_information.get('별자리', '')
         blood_type = personal_information.get('혈액형', '')
 
-        for short, full in Artist.CHOICES_BLOOD_TYPE:
-            if blood_type.strip() == full:
-                blood_type = short
+        # blood_type과 birth_date_str 이 없는경우 걸러내기
+        if birth_date == None:
+            birth_date = ''
+
+        if blood_type == None:
+            blood_type = ''
         else:
-            blood_type = Artist.BLOOD_TYPE_OTHER
+            for short, full in Artist.CHOICES_BLOOD_TYPE:
+                if blood_type.strip() == full:
+                    blood_type = short
+            else:
+                blood_type = Artist.BLOOD_TYPE_OTHER
 
         # artist_id가 melon_id에 해당하는 Artist가 있다면
         # 해당 Artist의 내용을 update
@@ -85,10 +93,9 @@ def artist_add_from_melon(request):
             nationality=nationality,
             birth_date=datetime.strptime(birth_date, '%Y.%m.%d'),
             constellation=constellation,
-            blood_type=blood_type
-
+            blood_type=blood_type,
         )
-        print(created)
-        print(personal_information)
+        # print(created)
+        # print(personal_information)
         return redirect('artist:artist-list')
         # return HttpResponse(personal_information.values)

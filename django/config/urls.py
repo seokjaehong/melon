@@ -13,8 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
 
 import artist
 
@@ -24,5 +26,12 @@ urlpatterns = [
     # artist.urls모듈을 include하도록 설정
     path('artist/', include('artist.urls')),
     path('song/', include('song.urls')),
-    path('album/',include('album.urls')),
+    path('album/', include('album.urls')),
+
 ]
+# settings.METIA_URL('/media/')로 시작하는 요청은
+# document_root인 settings.MEDIA_ROOT폴더에서 파일을 찾아 리턴해준다.
+urlpatterns += static(
+    settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT,
+)

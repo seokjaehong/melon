@@ -6,21 +6,11 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from album.models import Album
-from .models import Song
+from ...models import Song
 
-
-# Create your views here.
-def song_list(request):
-    songs = Song.objects.all()
-    context = {
-        'songs': songs,
-    }
-    # 전체 Artist목록을 ul>li로 출력
-    # 템플릿은 'artist/list.html'을 사용
-    # 전달할 context키는 'artist'를 사용
-
-    return render(request, 'song/song_list.html', context)
-
+__all__=(
+    'song_search',
+)
 
 def song_search(request):
     """
@@ -96,47 +86,3 @@ def song_search(request):
                 'songs': Song.objects.filter(q),
             })
     return render(request, 'song/song_search.html', context)
-
-# else를 없애고 render 를 한번만 사용해서 get/post 요청을 모두처리
-# return render(request, 'song/song_search.html')
-
-# songs = Song.objects.filter(
-#     Q(album__artists__name__contains=keyword) |
-#     Q(title__contains=keyword)|
-#     Q(album__title__contains=keyword)
-# ).distinct
-
-# filter 뒤의 조건을 Q Objects로 만들어서 for문에서 사용
-# songs_from_title = Song.objects.filter(title__contains=keyword)
-# songs_from_albums = Song.objects.filter(album__title__contains=keyword)
-# songs_from_artists = Song.objects.filter(album__artists__name__contains=keyword)
-
-# 미리선언한 context의 'songs'키에 Queryset을 할당
-
-# context['songs_from_title'] = songs_from_title
-# context['songs_from_albums'] = songs_from_albums
-# context['songs_from_artists'] = songs_from_artists
-
-# zip
-# 1
-# for type, songs in zip(('아티스트명', '앨범명', '노래제목'),
-#                        (songs_from_artists, songs_from_albums, songs_from_title)):
-#     context['song_infos'].append({
-#         'type': type,
-#         'songs': songs,
-#     })
-# 2
-# context['song_infos'].append({
-#     'type': '아티스트명',
-#     'songs': songs_from_artists
-# })
-# context['song_infos'].append({
-#     'type': '앨범명',
-#     'songs': songs_from_albums
-# })
-# context['song_infos'].append({
-#     'type': '노래제목',
-#     'songs': songs_from_title
-# })
-
-# get 이면 빈상태로 render실행
