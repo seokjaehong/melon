@@ -1,7 +1,10 @@
+import re
 from datetime import datetime
+from io import BytesIO
 
 import requests
 from bs4 import BeautifulSoup
+from django.core.files import File
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -39,7 +42,8 @@ def artist_add_from_melon(request):
     if request.method == 'POST':
         url = f'https://www.melon.com/artist/detail.htm'
         artist_id = request.POST['artist_id']
-        # url_img_cover = request.POST['url_img_cover']
+
+        # print(url_img_cover)
         params = {
             'artistId': artist_id,
         }
@@ -52,6 +56,22 @@ def artist_add_from_melon(request):
         div_detail_entry = soup.find('div', id='conts')
         # 이름
         artistname = soup.find('p', class_='title_atist').strong.next_sibling.strip()
+
+        # url_img_cover = request.POST['url_img_cover']
+        url_img_cover_source = div_detail_entry.find('div',class_='wrap_thumb').find('img')#.find('src')
+        r1 = re.compile(r'\;\".*\"(.*)\?', re.DOTALL)
+        url_img_cover = re.search(r1, str(url_img_cover_source)).group(1)
+        # print(url_img_cover)
+
+        response = requests.get(url_img_cover)
+        binary_data = response.content
+        #ByteIO는 파일처럼 취급되는 객체인데, 메모리에서 데이터가 아무것도 없는 파일이 생성되었다고 가정한다.
+        temp_file = BytesIO()
+        #그리고 , 파일에 데이터를 쓴다.
+        temp_file.write(binary_data)
+        #다쓰고 이파일에 탐색시점을 처음으로 돌려놓는다. 이렇게 하면 템프파일은 파일이 기록된 객
+        temp_file.seek(0)
+
 
         # info 정보
         if div_detail_entry.find('div', class_='section_atistinfo04') != None:
@@ -95,7 +115,25 @@ def artist_add_from_melon(request):
             constellation=constellation,
             blood_type=blood_type,
         )
-        # print(created)
-        # print(personal_information)
+
+        #프로필이 저장된 상태에서 url_image_cover를 업데이트한다.
+        from pathlib import Path
+        file_name = Path(url_img_cover).name
+        #Path란 url_img_coverdp에서 파일이름만 꺼내오고 싶을때
+        #즉 요런 파일 261143_500.jpg
+        #정규식이 아니라 내장라이브라이브러리로 파일 이름만 뽑아낼 수 있음
+
+
+        artist.img_profile.save(file_name,File(temp_file))
+        #ByteIO를 저장할때는 File로 한번 더 감싸준다.
+        #여기서 실제 File이 아니라 proxy역할을 해준다고 보면됨, 중개자 역할
+
+
+        # artist.save()
+
         return redirect('artist:artist-list')
         # return HttpResponse(personal_information.values)
+
+
+
+

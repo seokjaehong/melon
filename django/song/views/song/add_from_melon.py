@@ -1,3 +1,4 @@
+import re
 from collections import namedtuple
 from typing import NamedTuple
 
@@ -10,16 +11,18 @@ from django.shortcuts import render, redirect
 from album.models import Album
 from ...models import Song
 
-__all__=(
+__all__ = (
     'song_add_from_melon',
 )
 
+
 def song_add_from_melon(request):
-    #artist_add_from_melon과 같은 기능을 함
-    #song_search_from_melon도 같이 구현
+    # artist_add_from_melon과 같은 기능을 함
+    # song_search_from_melon도 같이 구현
     # -> 이 안에 'DB에 추가'하는 Form 구현
     url = f'https://www.melon.com/song/detail.htm'
     song_id = request.POST['song_id']
+    # album_id = request.POST['album_id']
     params = {
         'songId': song_id,
     }
@@ -37,7 +40,25 @@ def song_add_from_melon(request):
     description_dict = dict(zip(it, it))
 
     genre = description_dict.get('장르')
-    album = description_dict.get('앨범')
+    # album = description_dict.get('앨범')
+    album = dl.find('dd').find('a')
+    r1 = re.compile(r'\'(.*)\'', re.DOTALL)
+    album_melon_id = re.search(r1, str(album)).group(1)
+
+    album_values = Album.objects.filter(melon_id=album_melon_id).values()
+
+
+    #album에 없는 song이라도 저장할 수 있도록, 더좋은 방법 없나..
+    try:
+        album_id = album_values[0]['id']
+    except IndexError:
+        album_id = None
+
+    # if album_set[0]['id'] != []:
+    #     album_id = album_values[0]['id']
+    # else:
+    #     album_id = ''
+
     if soup.find('div', id='d_video_summary') is not None:
         div_lyrics = soup.find('div', id='d_video_summary')
         lyrics_list = []
@@ -48,18 +69,11 @@ def song_add_from_melon(request):
                 lyrics_list.append(item.strip())
         lyrics = ''.join(lyrics_list)
     else:
-        lyrics =''
-
-    # class Albuminfo(NamedTuple):
-    #     type: str
-    #     q :Q
-    #
-    # keyword = request.GET.POST('keyword')
-    # album_id = Album.objects.get(Q(album__artists__name__contains=request.POST(keyword)),)
+        lyrics = ''
 
     song, created = Song.objects.update_or_create(
         melon_id=song_id,
-        # album_id = album_id,
+        album_id=album_id,
         title=title,
         genre=genre,
         lyrics=lyrics,

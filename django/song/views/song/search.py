@@ -8,9 +8,10 @@ from django.shortcuts import render
 from album.models import Album
 from ...models import Song
 
-__all__=(
+__all__ = (
     'song_search',
 )
+
 
 def song_search(request):
     """

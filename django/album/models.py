@@ -8,6 +8,13 @@ class Album(models.Model):
         '앨범명',
         max_length=100,
     )
+    melon_id = models.CharField(
+        '멜론 Album ID',
+        max_length=20,
+        blank=True,
+        null=True,
+        unique=True,
+    )
     img_cover = models.ImageField(
         '커버 이미지',
         upload_to='album',

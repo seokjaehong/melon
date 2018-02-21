@@ -33,10 +33,14 @@ def song_search_from_melon(request):
             # artist = tr.select_one('td:nth-of-type(4) span.checkEllipsisSongdefaultList').get_text(
             #     strip=True)
             # album = tr.select_one('td:nth-of-type(5) a').get_text(strip=True)
+            album_source = tr.select_one('td:nth-of-type(5) a')
+            r1 = re.compile(r'\'.*\'(.*)\'', re.DOTALL)
+            album_id = re.search(r1, str(album_source)).group(1)
 
             song_info_list.append({
                 'title': title,
-                'song_id': song_id
+                'song_id': song_id,
+                'album_id': album_id
             })
         context['song_info_list'] = song_info_list
 
