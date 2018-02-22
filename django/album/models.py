@@ -20,10 +20,10 @@ class Album(models.Model):
         upload_to='album',
         blank=True,
     )
-    artists = models.ManyToManyField(
-        Artist,
-        verbose_name='아티스트 목록',
-    )
+    # artists = models.ManyToManyField(
+    #     Artist,
+    #     verbose_name='아티스트 목록',
+    # )
     release_date = models.DateField()
 
     @property
@@ -33,7 +33,8 @@ class Album(models.Model):
         return genre
 
     def __str__(self):
-        return '{title} [{artists}]'.format(
-            title=self.title,
-            artists=', '.join(self.artists.values_list('name', flat=True)),
-        )
+          return self.title
+#     return '{title} [{artists}]'.format(
+#         title=self.title,
+#         artists=', '.join(self.artists.values_list('name', flat=True)),
+#     )
