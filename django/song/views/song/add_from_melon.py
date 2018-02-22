@@ -1,14 +1,11 @@
 import re
-from collections import namedtuple
-from typing import NamedTuple
 
 import requests
 from bs4 import BeautifulSoup, NavigableString
-from django.db.models import Q
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 
 from album.models import Album
+from artist.models import Artist
 from ...models import Song
 
 __all__ = (
@@ -22,7 +19,6 @@ def song_add_from_melon(request):
     # -> 이 안에 'DB에 추가'하는 Form 구현
     url = f'https://www.melon.com/song/detail.htm'
     song_id = request.POST['song_id']
-    # album_id = request.POST['album_id']
     params = {
         'songId': song_id,
     }
@@ -38,17 +34,29 @@ def song_add_from_melon(request):
     items = [item.get_text(strip=True) for item in dl.contents if not isinstance(item, str)]
     it = iter(items)
     description_dict = dict(zip(it, it))
-
     genre = description_dict.get('장르')
     # album = description_dict.get('앨범')
+
     album = dl.find('dd').find('a')
     r1 = re.compile(r'\'(.*)\'', re.DOTALL)
     album_melon_id = re.search(r1, str(album)).group(1)
-
     album_values = Album.objects.filter(melon_id=album_melon_id).values()
 
+    artist = div_entry.find('div', class_='artist'.find('a', class_='artist_name'))
+    r2 = re.compile(r'goArtistDetail(.*)\'(.*?)\'', re.DOTALL)
+    artist_melon_id = re.search(r2, str(artist)).group(1)
+    artist_values = Artist.objects.filter(melon_id=artist_melon_id).values()
+    artist_id = artist_values[0]['id']
 
-    #album에 없는 song이라도 저장할 수 있도록, 더좋은 방법 없나..
+    print(album_melon_id)
+    print(artist_id)
+
+    try:
+        artist_id = artist_values[0]['id']
+    except IndexError:
+        artist_id = None
+
+    # album에 없는 song이라도 저장할 수 있도록, 더좋은 방법 없나..
     try:
         album_id = album_values[0]['id']
     except IndexError:
@@ -71,7 +79,7 @@ def song_add_from_melon(request):
     else:
         lyrics = ''
 
-    song, created = Song.objects.update_or_create(
+    song, _ = Song.objects.update_or_create(
         melon_id=song_id,
         album_id=album_id,
         title=title,
