@@ -30,6 +30,8 @@ STATICFILES_DIRS = [
 ]
 STATIC_URL = '/static/'
 
+AUTH_USER_MODEL = 'members.User'
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 't6_b4thzga9#^2o!^-+=v0dl@kc!#%$gl9(+&z2*cu^u)2y=ir'
 
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'artist',
     'album',
     'song',
+    'members',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
