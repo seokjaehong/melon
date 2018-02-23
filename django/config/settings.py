@@ -17,6 +17,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR =os.path.dirname(BASE_DIR)
 TEMPLATE_DIR =os.path.join(BASE_DIR,'templates')
+STATIC_DIR = os.path.join(BASE_DIR,'static')
 
 #static
 STATIC_URL = '/static/'
@@ -24,6 +25,11 @@ MEDIA_ROOT = os.path.join(ROOT_DIR, '.media')
 MEDIA_URL = '/media/'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
+#프로젝트의 정적파일들을 검색{% static %}할 디렉토리 목록
+STATICFILES_DIRS =[
+    STATIC_DIR,
+]
+STATIC_URL='/static/'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 't6_b4thzga9#^2o!^-+=v0dl@kc!#%$gl9(+&z2*cu^u)2y=ir'

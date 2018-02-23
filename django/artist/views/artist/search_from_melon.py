@@ -1,17 +1,15 @@
-
-from django.shortcuts import render, redirect
 import re
-from ...models import Artist
-import requests
-from bs4 import  BeautifulSoup
 
-__all__=(
+import requests
+from bs4 import BeautifulSoup
+from django.shortcuts import render
+
+__all__ = (
     'artist_search_from_melon',
 )
 
 
 def artist_search_from_melon(request):
-
     """
     Template: artist/artist_search_from_melon.html
         form (input[name=keyword]한개, button한개)
@@ -31,17 +29,12 @@ def artist_search_from_melon(request):
     :return:
     """
     keyword = request.GET.get('keyword')
-    print(keyword)
     context = {}
     if keyword:
-        import re
-        import requests
-        from bs4 import BeautifulSoup
         artist_info_list = []
-        URL = 'https://www.melon.com/search/artist/index.htm'
+        url = 'https://www.melon.com/search/artist/index.htm'
         params = {'q': keyword}
-        response = requests.get(URL, params)
-        print(response.text)
+        response = requests.get(url, params)
         soup = BeautifulSoup(response.text, 'lxml')
         for li in soup.select('div.list_atist12.d_artist_list > ul > li'):
             dl = li.select_one('div.atist_info > dl')
