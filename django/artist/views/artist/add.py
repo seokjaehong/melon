@@ -59,5 +59,6 @@ def artist_add(request):
             intro=intro,
         )
         return redirect('artist:artist-list')
+        # return redirect
     else:
         return render(request, 'artist/artist_add.html')

@@ -18,6 +18,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from members.views import login_view
+from members.views import logout_view
+from members.views import signup_view
+
 import artist
 from config import views
 
@@ -30,6 +33,8 @@ urlpatterns = [
     path('song/', include('song.urls')),
     path('album/', include('album.urls')),
     path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    path('signup/', signup_view, name='signup')
 
 ]
 # settings.METIA_URL('/media/')로 시작하는 요청은

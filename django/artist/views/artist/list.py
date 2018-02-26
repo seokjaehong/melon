@@ -14,5 +14,6 @@ def artist_list(request):
     return render(
         request,
         'artist/artist_list.html',
+        # 'artist:artist-list',
         context,
     )
