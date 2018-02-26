@@ -1,11 +1,13 @@
-
 from django.shortcuts import render, redirect
 import re
+
+# from ...forms import ArtistForm
+from artist.forms import ArtistForm
 from ...models import Artist
 import requests
-from bs4 import  BeautifulSoup
+from bs4 import BeautifulSoup
 
-__all__=(
+__all__ = (
     'artist_add',
 )
 
@@ -42,23 +44,17 @@ def artist_add(request):
     #       이후 'artist:artist-list'로 redirect
 
     if request.method == 'POST':
-        name = request.POST['name']
-        real_name = request.POST['real_name']
-        nationality = request.POST['nationality']
-        birth_date = request.POST['birth_date']
-        constellation = request.POST['constellation']
-        blood_type = request.POST['blood_type']
-        intro = request.POST['intro']
-        Artist.objects.create(
-            name=name,
-            real_name=real_name,
-            nationality=nationality,
-            birth_date=birth_date,
-            constellation=constellation,
-            blood_type=blood_type,
-            intro=intro,
-        )
-        return redirect('artist:artist-list')
-        # return redirect
+        # multipart/form-data로 전달된 파일은
+        # request.FILES 속성에 들어있음
+        # boundform을 만들떄
+        form = ArtistForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('artist:artist-list')
     else:
-        return render(request, 'artist/artist_add.html')
+        form = ArtistForm()
+
+    context = {
+        'artist_form': form,
+    }
+    return render(request, 'artist/artist_add.html', context)

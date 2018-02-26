@@ -3,20 +3,23 @@
 
 
 <div class="artist-list-container">
-	<ul class="clearfix">
-		{% for artist in artists %}
-		<li class="clearfix">
+    <!-- artist-add로 링크 -->
+    <a href="{% url 'artist:artist-add' %}">add 창으로 이동 </a>
+    <ul class="clearfix">
+        {% for artist in artists %}
+        <li class="clearfix">
             <a href="">
                 <img src="{% if artist.img_profile %}{{ artist.img_profile.url }}{% endif %}" alt="" class="cover">
-				<div class="artist-info">
-					<div class="name">{{ artist.name }}</div>
-					<div>{{ artist.nationality }}</div>
-					<div>{{ artist.birth_date }}</div>
-					<div>{{ artist.constellation }}</div>
-					<div>{{ artist.blood_type }}</div>
-				</div>
+                <div class="artist-info">
+                    <div class="name">{{ artist.name }}</div>
+                    <div>{{ artist.nationality }}</div>
+                    <div>{{ artist.birth_date }}</div>
+                    <div>{{ artist.constellation }}</div>
+                    <div>{{ artist.blood_type }}</div>
+                </div>
             </a>
         </li>
+
         {% endfor %}
     </ul>
 </div>
