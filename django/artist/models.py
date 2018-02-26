@@ -130,8 +130,15 @@ class Artist(models.Model):
         '소개',
         blank=True,
     )
+    like_users = models.ManyToManyField(
+        ...
+    )
 
     objects = ArtistManager()
 
     def __str__(self):
         return self.name
+
+class ArtistLike(models.Model):
+    #Artist와 User(members.User)와의 관계를 나타내는 중개모델
+    pass
