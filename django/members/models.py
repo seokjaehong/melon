@@ -1,8 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-
 # Create your models here.
+from artist.models import ArtistLike
+
 
 class User(AbstractUser):
     # user class 추가
@@ -12,4 +13,23 @@ class User(AbstractUser):
 
     # makemigrations  ->  migrate
 
-    pass
+    def toggle_like_artist(self, artist):
+        """
+        이 user와 특정 artist를 연결하는 중개모델인 ArtistLike 인스턴스를
+        없을 경우 생성, 있으면 삭제 하는 매서드
+
+        :param user:
+        :return:
+        """
+        #
+        # if ArtistLike.objects.filter(artist=artist):
+        #     ArtistLike.objects.filter(artist=artist, user=self.user).delete()
+        # else:
+        #     ArtistLike.objects.create(
+        #         artist=artist,
+        #         user=self.user,
+        #     )
+        like, like_created = self.like_artist_info_list.get_or_create(artist=artist)
+        if not like_created:
+            like.delete()
+        return like_created
