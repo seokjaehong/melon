@@ -1,13 +1,13 @@
 from datetime import datetime
-from io import BytesIO
-from pathlib import Path
-
-import requests
 from django.core.files import File
 from django.db import models
 
+from config import settings
 from crawler.album import AlbumData
+
 from utils.file import download, get_buffer_ext
+
+User = settings.AUTH_USER_MODEL
 
 
 class AlbumManager(models.Manager):
@@ -17,7 +17,7 @@ class AlbumManager(models.Manager):
 
         album_id = album_data.album_id
         title = album_data.title
-        url_img_cover = album_data.img_cover
+        url_img_cover = album_data.url_img_cover
         release_date_str = album_data.release_date
 
         album, album_created = self.update_or_create(
@@ -31,11 +31,13 @@ class AlbumManager(models.Manager):
 
         temp_file = download(url_img_cover)
 
-        file_name = '{artist_id}.{ext}'.format(
+        file_name = '{album_id}.{ext}'.format(
             album_id=album_id,
             ext=get_buffer_ext(temp_file),
         )
-
+        # 중복데이터 제거
+        if album.img_cover:
+            album.img_cover.delete()
         album.img_cover.save(file_name, File(temp_file))
         return album, album_created
 
@@ -62,8 +64,45 @@ class Album(models.Model):
     objects = AlbumManager()
 
     def __str__(self):
-        # return '{title} [{artists}]'.format(
-        #     title=self.title,
-        #     artists=', '.join(self.artists.values_list('name', flat=True)),
-        # )
         return self.title
+
+    def toggle_like_user(self, user):
+        like, like_created = self.like_user_info_list.get_or_create(user=user)
+        if not like_created:
+            like.delete()
+        return like_created
+
+    class Meta:
+        verbose_name_plural = 'Melon-Album'
+
+
+class AlbumLike(models.Model):
+    # album와 User(members.User)와의 관계를 나타내는 중개모델
+    album = models.ForeignKey(
+        Album,
+        related_name='like_user_info_list',
+        on_delete=models.CASCADE,
+
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='like_album_info_list',
+        on_delete=models.CASCADE,
+    )
+    created_date = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return 'Albumlike (User: {user}, Album{album}), Created{created}'.format(
+            # return '"{album}"가수의 좋아요를 누른({username}, {date})'.format(
+            album=self.album.name,
+            user=self.user.username,
+            created=datetime.strftime(self.created_date, '%y.%m.%d'),
+        )
+
+    class Meta:
+        unique_together = (
+            ('album', 'user'),
+        )
+        # 좋아요가 중복으로 되는것을 방지

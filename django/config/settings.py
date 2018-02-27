@@ -42,6 +42,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+FACEBOOK_APP_ID = '956569987850562'
+FACEBOOK_SECRET_CODE = '70aae02cd2a59ede34f240762dcbe241'
+
 INSTALLED_APPS = [
     'artist',
     'album',

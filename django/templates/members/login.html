@@ -2,14 +2,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <div>
-	<h1>로그인</h1>
+	<h1>아이디로 로그인</h1>
     <form action="" method="POST">
         {% csrf_token %}
         <input type="text" name="username" id="username">
         <input type="password" name="password" id="password">
         <button type="submit">로그인</button>
     </form>
-    <a href="">로그아웃</a>
+
+    <a href="https://www.facebook.com/v2.12/dialog/oauth?client_id=956569987850562&redirect_uri=http://localhost:8000/facebook-login/">페이스북 로그인
+    </a>
 </div>
+
 {% endblock %}

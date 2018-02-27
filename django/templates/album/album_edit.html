@@ -4,7 +4,7 @@
 <div>
 	<form action="" method="POST">
 		{% csrf_token %}
-		{% for field in artist_form %}
+		{% for field in album_form %}
 			<div>
 				<label for="{{ field.id_for_label }}">{{ field.label }}</label>
 				{{ field }}

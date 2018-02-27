@@ -9,7 +9,7 @@
         {% for artist in artists %}
         <li class="clearfix">
             <a href="">
-                <img src="{% if artist.img_profile %}{{ artist.img_profile.url }}{% endif %}" alt="" class="cover">
+                <img src="{% if artist.img_cover %}{{ artist.img_cover.url }}{% endif %}" alt="" class="cover">
                 <div class="artist-info">
                     <div class="name">{{ artist.name }}</div>
                     <div>{{ artist.nationality }}</div>
@@ -17,7 +17,8 @@
                     <div>{{ artist.constellation }}</div>
                     <div>{{ artist.blood_type }}</div>
                 </div>
-                <button>좋아요</button>
+
+                <button type="submit">좋아요</button>
             </a>
         </li>
 

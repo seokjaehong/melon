@@ -3,22 +3,22 @@
 {% block content %}
 <div class="album-list-container">
 	<!-- album-add로의 링크 생성 -->
-	<a href="{% url 'album:album-add' %}"> 추가</a>
+	<a href="{% url 'album:album-add' %}">앨범 추가</a>
 	<ul class="clearfix">
-		{% for album in albums %}
 		<li class="clearfix">
-			<a href="{% url 'album:album-detail' album_pk=album.pk %}">
+			<a href="">
 				<img src="{% if album.img_cover %}{{ album.img_cover.url }}{% endif %}" alt="" class="cover">
 				<div class="album-info">
-					<div class="name">{{ album.title }}</div>
+					<div class="name">{{ album.title}}</div>
 					<div>{{ album.release_date }}</div>
 				</div>
 
 				{% if request.user.is_authenticated %}
-				<!-- album_like_toggle을 실행할 form -->
+				<!-- artist_like_toggle을 실행할 form -->
 				<form action="{% url 'album:album-like-toggle' album_pk=album.pk %}" method="POST">
 					{% csrf_token %}
-					{% if request.user in album.like_users.all %}
+					<input type="hidden" name="next-path" value="{{ request.get_full_path }}">
+					{% if album.user in album.like_users.all %}
 						<button type="submit">좋아요 취소</button>
 					{% else %}
 						<button type="submit">좋아요</button>
@@ -27,7 +27,6 @@
 				{% endif %}
 			</a>
 		</li>
-		{% endfor %}
 	</ul>
 </div>
 {% endblock %}

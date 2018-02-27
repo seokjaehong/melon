@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <h3>멜론에서 앨범 검색</h3>
+    <form action="">
+        <input type="text" name="keyword" placeholder="앨범명">
+        <button type="submit">검색</button>
+    </form>
+
+    <ul>
+        {% for album_info in album_info_list %}
+        <li>
+            <img src="{{ album_info.url_img_cover }}" alt="">
+            <span>{{ album_info.album_id}} | {{ album_info.title }}</span>
+            <form action="{% url 'album:album-add-from-melon' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="album_id" value="{{ album_info.album_id }}">
+                <!--
+                만약 DB에 있는 데이터일 경우에는 DB업데이트라는 문자열을 버튼의 텍스트로 사용
+                -->
+                {% if album_info.is_update %}
+                    <button type="submit">DB에 업데이트</button>
+                {% else %}
+                    <button type="submit">DB에 추가하기</button>
+                {% endif %}
+                <!--<button type="submit">DB에 추가하기</button>-->
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

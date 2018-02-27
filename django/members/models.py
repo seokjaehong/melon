@@ -33,3 +33,9 @@ class User(AbstractUser):
         if not like_created:
             like.delete()
         return like_created
+
+    def toggle_like_album(self, album):
+        like, like_created = self.like_album_info_list.get_or_create(album=album)
+        if not like_created:
+            like.delete()
+        return like_created

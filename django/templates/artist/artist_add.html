@@ -2,41 +2,38 @@
 
 {% block content %}
 <div>
-    <h3>직접 아티스트 추가</h3>
-    <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in artist_form %}
-        <div>
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
-            {% if field.error %}
-            <ul>
-                {% for error in field.error %}
-                <li>
-                    {{ error }}
-                </li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-        </div>
-        {% endfor %}
-        <!--<input type="text" name="name">-->
-        <button type="submit">등록</button>
-    </form>
+	<h3>직접 아티스트 추가</h3>
+	<form action="" method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+		{% for field in artist_form %}
+			<div>
+				<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+				{{ field }}
+				{% if field.errors %}
+				<ul>
+					{% for error in field.errors %}
+					<li>{{ error }}</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+			</div>
+		{% endfor %}
+		<button type="submit">등록</button>
+	</form>
 
-    <hr>
+	<hr>
 
-    <!--
-        form을 한 개 더 추가
-        이 form이 하는 일은 '멜론에서 Artist검색 후 목록 보여주기'를 실행
-            -> 목록을 보여주는 일은 artist-search-from-melon이 하는것에 유의
-            -> 검색 후에는 URL이 'artist-search-from-melon'부분으로 이동해야 함
-    -->
-    <h3>멜론에서 아티스트 검색</h3>
-    <form action="{% url 'artist:artist-search-from-melon' %}">
-        <input type="text" name="keyword" placeholder="아티스트명">
-        <button type="submit">검색</button>
-    </form>
+	<!--
+		form을 한 개 더 추가
+		이 form이 하는 일은 '멜론에서 Artist검색 후 목록 보여주기'를 실행
+			-> 목록을 보여주는 일은 artist-search-from-melon이 하는것에 유의
+			-> 검색 후에는 URL이 'artist-search-from-melon'부분으로 이동해야 함
+	-->
+	<h3>멜론에서 아티스트 검색</h3>
+	<form action="{% url 'artist:artist-search-from-melon' %}">
+		<input type="text" name="keyword" placeholder="아티스트명">
+		<button type="submit">검색</button>
+	</form>
 
 </div>
 {% endblock %}
