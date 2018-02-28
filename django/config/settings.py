@@ -44,7 +44,10 @@ ALLOWED_HOSTS = []
 
 FACEBOOK_APP_ID = '956569987850562'
 FACEBOOK_SECRET_CODE = '70aae02cd2a59ede34f240762dcbe241'
-
+AUTHENTICATION_BACKENDS =[
+    'django.contrib.auth.backends.ModelBackend',
+    'members.backends.FacebookBackends',
+]
 INSTALLED_APPS = [
     'artist',
     'album',

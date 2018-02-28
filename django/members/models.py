@@ -13,6 +13,11 @@ class User(AbstractUser):
 
     # makemigrations  ->  migrate
 
+    img_profile = models.ImageField(
+        upload_to='user',
+        blank=True
+    )
+
     def toggle_like_artist(self, artist):
         """
         이 user와 특정 artist를 연결하는 중개모델인 ArtistLike 인스턴스를

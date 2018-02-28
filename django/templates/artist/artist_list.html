@@ -6,24 +6,31 @@
     <!-- artist-add로 링크 -->
     <a href="{% url 'artist:artist-add' %}">add 창으로 이동 </a>
     <ul class="clearfix">
-        {% for artist in artists %}
-        <li class="clearfix">
-            <a href="">
-                <img src="{% if artist.img_cover %}{{ artist.img_cover.url }}{% endif %}" alt="" class="cover">
-                <div class="artist-info">
-                    <div class="name">{{ artist.name }}</div>
-                    <div>{{ artist.nationality }}</div>
-                    <div>{{ artist.birth_date }}</div>
-                    <div>{{ artist.constellation }}</div>
-                    <div>{{ artist.blood_type }}</div>
-                </div>
-
-                <button type="submit">좋아요</button>
-            </a>
-        </li>
-
-        {% endfor %}
-    </ul>
+		{% for artist in artists %}
+		<li class="clearfix">
+			<a href="{% url 'artist:artist-detail' artist_pk=artist.pk %}">
+				<img src="{% if artist.img_profile %}{{ artist.img_profile.url }}{% endif %}" alt="" class="cover">
+				<div class="artist-info">
+					<div class="name">{{ artist.name }}</div>
+					<div>{{ artist.nationality }}</div>
+					<div>{{ artist.birth_date }}</div>
+					<div>{{ artist.constellation }}</div>
+					<div>{{ artist.blood_type }}</div>
+					{% if request.user.is_authenticated %}
+					<!-- artist_like_toggle을 실행할 form -->
+					<form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST">
+						{% csrf_token %}
+						{% if request.user in artist.like_users.all %}
+							<button type="submit">좋아요 취소</button>
+						{% else %}
+							<button type="submit">좋아요</button>
+						{% endif %}
+					</form>
+					{% endif %}
+				</div>
+			</a>
+		</li>
+		{% endfor %}    </ul>
 </div>
 {% endblock %}
 
