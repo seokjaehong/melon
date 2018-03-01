@@ -36,7 +36,9 @@ urlpatterns = [
     path('facebook-login/', facebook_login, name='facebook-login'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
-    path('signup/', signup_view, name='signup')
+    path('signup/', signup_view, name='signup'),
+    path('sms/', include('sms.urls')),
+    path('mail/', include('mail.urls')),
 
 ]
 # settings.METIA_URL('/media/')로 시작하는 요청은

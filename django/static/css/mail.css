@@ -1,0 +1,8 @@
+.mail-contents {
+  height: 150px;
+  border-bottom: 1px solid #999;
+}
+
+.mail-body {
+  margin: 10px;
+}

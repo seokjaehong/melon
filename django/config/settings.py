@@ -48,11 +48,23 @@ AUTHENTICATION_BACKENDS =[
     'django.contrib.auth.backends.ModelBackend',
     'members.backends.FacebookBackends',
 ]
+YOUTUBE_API_KEY= 'AIzaSyDsdhEKBzSrFOzmEPqe-xsVtrBiMEJ6TZg'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'devhsj@gmail.com'
+EMAIL_HOST_PASSWORD = 'tjrwo123'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 INSTALLED_APPS = [
     'artist',
     'album',
     'song',
     'members',
+    'mail',
+    'sms',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',

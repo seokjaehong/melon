@@ -27,5 +27,3 @@ class UserAdmin(DjangoUserAdmin):
         )}),
     )
 
-
-#AIzaSyDsdhEKBzSrFOzmEPqe-xsVtrBiMEJ6TZg

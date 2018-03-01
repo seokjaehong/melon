@@ -2,34 +2,69 @@
 
 {% block content %}
 <div class="artist-list-container">
-	<!-- artist-add로의 링크 생성 -->
-	<a href="{% url 'artist:artist-add' %}">아티스트 추가</a>
-	<ul class="clearfix">
-		<li class="clearfix">
-			<a href="">
-				<img src="{% if artist.img_profile %}{{ artist.img_profile.url }}{% endif %}" alt="" class="cover">
-				<div class="artist-info">
-					<div class="name">{{ artist.name }}</div>
-					<div>{{ artist.nationality }}</div>
-					<div>{{ artist.birth_date }}</div>
-					<div>{{ artist.constellation }}</div>
-					<div>{{ artist.blood_type }}</div>
-				</div>
+    <!-- artist-add로의 링크 생성 -->
+    <a href="{% url 'artist:artist-add' %}">아티스트 추가</a>
+    <ul class="artist-list clearfix">
+        <li class="clearfix">
+            <a href="">
+                <img src="{% if artist.img_profile %}{{ artist.img_profile.url }}{% endif %}" alt="" class="cover">
+                <div class="artist-info">
+                    <div class="name">{{ artist.name }}</div>
+                    <div>{{ artist.nationality }}</div>
+                    <div>{{ artist.birth_date }}</div>
+                    <div>{{ artist.constellation }}</div>
+                    <div>{{ artist.blood_type }}</div>
+                </div>
 
-				{% if request.user.is_authenticated %}
-				<!-- artist_like_toggle을 실행할 form -->
-				<form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST">
-					{% csrf_token %}
-					<input type="hidden" name="next-path" value="{{ request.get_full_path }}">
-					{% if request.user in artist.like_users.all %}
-						<button type="submit">좋아요 취소</button>
-					{% else %}
-						<button type="submit">좋아요</button>
-					{% endif %}
-				</form>
-				{% endif %}
-			</a>
-		</li>
-	</ul>
+                {% if request.user.is_authenticated %}
+                <!-- artist_like_toggle을 실행할 form -->
+                <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="next-path" value="{{ request.get_full_path }}">
+                    {% if request.user in artist.like_users.all %}
+                    <button type="submit">좋아요 취소</button>
+                    {% else %}
+                    <button type="submit">좋아요</button>
+                    {% endif %}
+                </form>
+                {% endif %}
+            </a>
+        </li>
+    </ul>
+    <div>
+        <h3>저장된 YouTube영상</h3>
+        <ul class="youtube-search-list">
+            {% for video in artist.youtube_videos.all %}
+            <li>
+                <a href="https://youtu.be/{{ video.youtube_id }}" target="_blank">
+                    <img src="{{ video.url_thumbnail }}" alt="">
+                </a>
+                <div>{{ video.title }}</div>
+            </li>
+            {% endfor %}
+        </ul>
+        <hr>
+    </div>
+    <div>
+        <h3>관련 YouTube영상</h3>
+        <ul class="youtube-search-list">
+            {% for item in youtube_items %}
+            <li>
+                <a href="https://youtu.be/{{ item.id.videoId }}" target="_blank">
+                    <img src="{{ item.snippet.thumbnails.medium.url }}" alt="">
+                </a>
+                <div>{{ item.snippet.title }}</div>
+                <form action="{% url 'artist:artist-add-youtube' artist_pk=artist.pk %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="youtube_id" value="{{ item.id.videoId }}">
+                    <input type="hidden" name="title" value="{{ item.snippet.title }}">
+                    <input type="hidden" name="url_thumbnail" value="{{ item.snippet.thumbnails.high.url }}">
+                    <input type="hidden" name="next-path" value="{{ request.get_full_path }}">
+                    <button type="submit">DB에 저장</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock %}

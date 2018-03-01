@@ -1,10 +1,11 @@
 from django.forms import ModelForm
 from django import forms
 
-from artist.models import Artist
+from artist.models import Artist, ArtistYouTube
 
 __all__ = (
-    'ArtistForm'
+    'ArtistForm',
+    # 'YoutubeForm',
 )
 
 
@@ -20,3 +21,17 @@ class ArtistForm(forms.ModelForm):
                 }
             )
         }
+
+
+# class YoutubeForm(forms.ModelForm):
+#     class Meta:
+#         model = ArtistYouTube
+#         fields = ['youtube_id', 'title', 'url_thumbnail']
+#         widgets = {
+#             'name': forms.TextInput(
+#                 attrs={
+#                     'class': 'form-control'
+#                 }
+#
+#             )
+#         }

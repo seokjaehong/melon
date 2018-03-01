@@ -79,4 +79,4 @@ def facebook_login_backup(request):
     return redirect('index')
 
     # access_token : EAANlZCs5UIUIBALSsmWjRnYl4i6XXSt9uzmNh5j7rcyBZCH92K54ukKNssuoS6p1NJvC8zZBpdkn9qLInrZBeWTwJX2EsVBREXq2vveGzlzDpo5NLkpoZAcGyKc4INEXXA83ZCGwTLeDVTQOMbFoTIlNwBgRpVoroG1TBl9gFhVgZDZD
-
+    #AIzaSyDsdhEKBzSrFOzmEPqe-xsVtrBiMEJ6TZg

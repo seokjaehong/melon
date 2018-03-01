@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2> 메일 보내기 </h2>
+<div class="mail-body">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+            <h3>받는사람 email 주소 </h3>
+            <input type="text" name="mail_address" id="mail_address">
+        </div>
+        <div>
+            <h3>제목 </h3>
+            <input type="text" name="title" id="title">
+        </div>
+        <div>
+            <h3>내용</h3>
+            <input type="text" name="contents" id="contents" class="mail-contents">
+        </div>
+        <div class="file_upload">
+            파일첨부하기
+        </div>
+        <button type="submit"> 전송</button>
+    </form>
+</div>
+{% endblock %}
