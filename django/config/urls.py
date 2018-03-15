@@ -29,7 +29,7 @@ urlpatterns = [
     # artist/로 시작하는 path가
     # artist.urls모듈을 include하도록 설정
     path('', views.index, name='index'),
-    path('artist/', include('artist.urls')),
+    path('artist/', include('artist.urls.views')),
     path('song/', include('song.urls')),
     path('album/', include('album.urls')),
 
@@ -39,6 +39,9 @@ urlpatterns = [
     path('signup/', signup_view, name='signup'),
     path('sms/', include('sms.urls')),
     path('mail/', include('mail.urls')),
+
+    path('api/artist/', include('artist.urls.apis')),
+
 
 ]
 # settings.METIA_URL('/media/')로 시작하는 요청은
