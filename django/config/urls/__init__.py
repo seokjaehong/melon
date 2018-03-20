@@ -17,6 +17,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+
+from members.apis import AuthTokenView
 from members.views import login_view, facebook_login
 from members.views import logout_view
 from members.views import signup_view
@@ -24,25 +26,14 @@ from members.views import signup_view
 import artist
 from config import views
 
+from . import views
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+
     # artist/로 시작하는 path가
     # artist.urls모듈을 include하도록 설정
-    path('', views.index, name='index'),
-    path('artist/', include('artist.urls.views')),
-    path('song/', include('song.urls')),
-    path('album/', include('album.urls')),
-
-    path('facebook-login/', facebook_login, name='facebook-login'),
-    path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),
-    path('signup/', signup_view, name='signup'),
-    path('sms/', include('sms.urls')),
-    path('mail/', include('mail.urls')),
-
-    path('api/artist/', include('artist.urls.apis')),
-
-
+    path('', include('config.urls.views')),
+    path('api/', include('config.urls.apis')),
 ]
 # settings.METIA_URL('/media/')로 시작하는 요청은
 # document_root인 settings.MEDIA_ROOT폴더에서 파일을 찾아 리턴해준다.
