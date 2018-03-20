@@ -14,12 +14,47 @@ User = settings.AUTH_USER_MODEL
 
 from utils.file import download, get_buffer_ext
 
-
-__all__= (
+__all__ = (
     'ArtistManager',
 )
 
+
 class ArtistManager(models.Manager):
+    def to_dict(self):
+        # 기존 쿼리셋 -> self.get_queryset()
+        # 특정 쿼리셋의 데이터 리스트를 dict의 list 형태로 반환하도록 함
+        # Artist.objects.all().to_dict()
+        #   나오는 결과가 list형태로
+        #    [
+        #        {
+        #            'pk':<artist pk>,
+        #             'name':<artist name>,
+        #             'melon_id':<artist melon_id>,
+        #        },
+        #        {
+        #            'pk':<artist pk>,
+        #             'name':<artist name>,
+        #             'melon_id':<artist melon_id>,
+        #        },
+        #
+        #    ]
+        # artists = self.get_queryset()
+        # data = [
+        #            {
+        #                'pk': artist.pk,
+        #                'name': artist.name,
+        #                'melon_id': artist.melon_id,
+        #            }
+        #            for artist in artists
+        #        ]
+        # return data
+
+
+        result =[]
+        for instance in self.get_queryset():
+            result.append(instance.to_json())
+        return result
+
     def update_or_create_from_melon(self, artist_id):
         from .artist import Artist
         artist = ArtistData(artist_id)
