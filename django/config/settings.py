@@ -47,6 +47,7 @@ FACEBOOK_SECRET_CODE = '70aae02cd2a59ede34f240762dcbe241'
 AUTHENTICATION_BACKENDS =[
     'django.contrib.auth.backends.ModelBackend',
     'members.backends.FacebookBackends',
+    'members.backends.APIFacebookBackends',
 ]
 YOUTUBE_API_KEY= 'AIzaSyDsdhEKBzSrFOzmEPqe-xsVtrBiMEJ6TZg'
 

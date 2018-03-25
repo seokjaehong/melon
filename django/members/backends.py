@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.files import File
+from rest_framework import status
 
 from config import settings
 import requests
@@ -7,6 +8,49 @@ import requests
 from utils.file import download, get_buffer_ext
 
 User = get_user_model()
+
+
+class APIFacebookBackends:
+    CLIENT_ID = settings.FACEBOOK_APP_ID
+    CLIENT_SECRET = settings.FACEBOOK_SECRET_CODE
+
+    def authenticate(self, request, access_token):
+        params = {
+            'access_token': access_token,
+            'fields': ','.join([
+                'id',
+                'name',
+                'picture.width(2500)',
+                'first_name',
+                'last_name',
+            ])
+        }
+        response = requests.get('https://graph.facebook.com/v2.12/me', params)
+        if response.status_code == status.HTTP_200_OK:
+            user_info = response.json()
+
+            facebook_id = user_info['id']
+            name = user_info['name']
+            first_name = user_info['first_name']
+            last_name = user_info['last_name']
+
+            try:
+                user = User.objects.get(username=facebook_id)
+            except:
+                user = User.objects.create_user(
+                    username=facebook_id,
+                    name=name,
+                    first_name=first_name,
+                    last_name=last_name,
+                )
+
+            return user
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
 
 
 class FacebookBackends:
